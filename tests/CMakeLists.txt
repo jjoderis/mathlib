@@ -10,16 +10,16 @@ set(CMAKE_CXX_FLAGS "-Wall -Wextra -pedantic-errors")
 set(GOOGLETEST_DIR ../tools/googletest)
 
 # Download and unpack googletest at configure time
-configure_file(${TEST_DIR}/CMakeLists.txt googletest-download/CMakeLists.txt)
+configure_file(${GOOGLETEST_DIR}/CMakeLists.txt.in ${GOOGLETEST_DIR}/googletest-download/CMakeLists.txt)
 execute_process(COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" .
 RESULT_VARIABLE result
-WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/googletest-download )
+WORKING_DIRECTORY ${GOOGLETEST_DIR}/googletest-download )
 if(result)
 message(FATAL_ERROR "CMake step for googletest failed: ${result}")
 endif()
 execute_process(COMMAND ${CMAKE_COMMAND} --build .
 RESULT_VARIABLE result
-WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/googletest-download )
+WORKING_DIRECTORY ${GOOGLETEST_DIR}/googletest-download )
 if(result)
 message(FATAL_ERROR "Build step for googletest failed: ${result}")
 endif()
