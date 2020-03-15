@@ -4,6 +4,8 @@ set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_CXX_FLAGS "-Wall -Wextra -pedantic-errors")
 
+set(SRC_DIR ../src)
+
 ##########################
 #GTest
 
@@ -30,8 +32,8 @@ set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 
 # Add googletest directly to our build. This defines
 # the gtest and gtest_main targets.
-add_subdirectory(${CMAKE_CURRENT_BINARY_DIR}/googletest-src
-                ${CMAKE_CURRENT_BINARY_DIR}/googletest-build
+add_subdirectory(${GOOGLETEST_DIR}/googletest-src
+                ${GOOGLETEST_DIR}/googletest-build
                 EXCLUDE_FROM_ALL)
 
 # The gtest/gtest_main targets carry header search path
@@ -43,11 +45,15 @@ endif()
 
 ##########################
 
-# link test files against gtest_main
-add_executable(unitTests ${TEST_FILES})
-target_link_libraries(unitTests gtest_main Math_Util CG_Framework_Core CG_Framework_OpenGL CG_Helper_Functions)
-add_test(NAME example_test COMMAND unitTests)
+set(TEST_FILES
+    LinAlg/Vector/vector.test.cpp
+)
 
-target_include_directories(unitTests PUBLIC
-    ${PROJECT_INCLUDES}
+# link test files against gtest_main
+add_executable(tests ${TEST_FILES})
+target_link_libraries(tests gtest_main)
+add_test(NAME example_test COMMAND tests)
+
+target_include_directories(tests PUBLIC
+    ${SRC_DIR}
 )
