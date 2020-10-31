@@ -32,4 +32,13 @@
 *.app
 
 /build
-/tools/googletest
+.vscode
+
+!external
+
+external/*
+!external/googletest
+
+external/googletest/*
+!external/googletest/CMakeLists.txt.in
+

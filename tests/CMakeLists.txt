@@ -4,12 +4,10 @@ set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_CXX_FLAGS "-Wall -Wextra -pedantic-errors")
 
-set(SRC_DIR ../src)
-
 ##########################
 #GTest
 
-set(GOOGLETEST_DIR ../tools/googletest)
+set(GOOGLETEST_DIR "${PROJECT_SOURCE_DIR}/external/googletest")
 
 # Download and unpack googletest at configure time
 configure_file(${GOOGLETEST_DIR}/CMakeLists.txt.in ${GOOGLETEST_DIR}/googletest-download/CMakeLists.txt)
@@ -46,12 +44,14 @@ endif()
 ##########################
 
 set(TEST_FILES
-    LinAlg/Vector/vector.test.cpp
+    Core/Vector/vector.test.cpp
+    Core/Matrix/matrix.test.cpp
+    util/type_traits.test.cpp
 )
 
 # link test files against gtest_main
 add_executable(tests ${TEST_FILES})
-target_link_libraries(tests gtest_main)
+target_link_libraries(tests gtest gmock gtest_main)
 add_test(NAME example_test COMMAND tests)
 
 target_include_directories(tests PUBLIC
