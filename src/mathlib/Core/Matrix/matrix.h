@@ -5,10 +5,10 @@
 #include <cassert>
 #include <iostream>
 #include <math.h>
-#include <Core/Vector/vector.h>
-#include <util/type_traits.h>
+#include "../Vector/vector.h"
+#include "../../util/type_traits.h"
 
-namespace Core {
+namespace MathLib {
 
     // a template for a basic matrix of static size (data stored in column major order)
     template<typename T, int rows, int cols, typename = typename std::enable_if<std::is_arithmetic<T>::value, T>::type>
@@ -50,10 +50,10 @@ namespace Core {
          * Constructor for initialization with column vectors
          **/
         template<typename... Tail>
-        Matrix(typename std::enable_if<sizeof...(Tail)+1 == cols && are_same<Vector<T, rows>, Tail...>{}, Core::Vector<T, rows>>::type head, Tail... tail)
+        Matrix(typename std::enable_if<sizeof...(Tail)+1 == cols && are_same<Vector<T, rows>, Tail...>{}, Vector<T, rows>>::type head, Tail... tail)
             : m_data{ new T[rows*cols] }
         {
-            const Core::Vector<T, rows> tmp[cols]{ head, tail...};
+            const Vector<T, rows> tmp[cols]{ head, tail...};
 
             int index = 0;
             for(int i = 0; i < cols; ++i) {

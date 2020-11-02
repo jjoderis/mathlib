@@ -1,36 +1,37 @@
 #include <Core/Vector/vector.h>
 #include <gtest/gtest.h>
 
+using namespace MathLib;
 class VectorTest: public ::testing::Test
 {
     protected:
 
-    Core::Vector<int, 3> TestVec{ 1, 2, 3 };
-    Core::Vector<int, 3> TestVecNeg{ -1, -2, -3 };
-    Core::Vector<int, 3> TestVecX2{ 2, 4, 6 };
+    Vector<int, 3> TestVec{ 1, 2, 3 };
+    Vector<int, 3> TestVecNeg{ -1, -2, -3 };
+    Vector<int, 3> TestVecX2{ 2, 4, 6 };
 };
 
 TEST(VECTOR_TEST, instantiate_vector)
 {
-    Core::Vector<float, 3> a{};
+    Vector<float, 3> a{};
 }
 
 TEST(VECTOR_TEST, instantiate_and_initialize_vector)
 {
-    Core::Vector<float, 3> a{ 1.0, 0.0, 0.0 };
+    Vector<float, 3> a{ 1.0, 0.0, 0.0 };
 }
 
 TEST_F(VectorTest, instantiate_and_initialize_with_smaller_vector)
 {
-    Core::Vector<int, 4> a{ TestVec, 4 };
-    Core::Vector<int, 4> expected{ 1, 2, 3, 4 };
+    Vector<int, 4> a{ TestVec, 4 };
+    Vector<int, 4> expected{ 1, 2, 3, 4 };
     EXPECT_EQ(a, expected);
 }
 
 TEST_F(VectorTest, instantiate_and_initialize_with_bigger_vector)
 {
-    Core::Vector<int, 2> a{ TestVec };
-    Core::Vector<int, 2> expected{ 1, 2 };
+    Vector<int, 2> a{ TestVec };
+    Vector<int, 2> expected{ 1, 2 };
     EXPECT_EQ(a, expected);
 }
 
@@ -68,14 +69,14 @@ TEST_F(VectorTest, set_function)
 
 TEST_F(VectorTest, copy_constructor)
 {
-    Core::Vector<int, 3> copy{ TestVec };
+    Vector<int, 3> copy{ TestVec };
 
     EXPECT_EQ(copy, TestVec);
 }
 
 TEST_F(VectorTest, assignment_operator)
 {
-    Core::Vector<int, 3> copy{};
+    Vector<int, 3> copy{};
     copy = TestVec;
 
     EXPECT_EQ(copy, TestVec);
@@ -83,16 +84,16 @@ TEST_F(VectorTest, assignment_operator)
 
 TEST_F(VectorTest, copy_constructor_other_type)
 {
-    Core::Vector<double, 3> orig{ 1.0, 2.0, 3.0 };
-    Core::Vector<int, 3> copy{ orig };
+    Vector<double, 3> orig{ 1.0, 2.0, 3.0 };
+    Vector<int, 3> copy{ orig };
 
     EXPECT_EQ(copy, TestVec);
 }
 
 TEST_F(VectorTest, assignment_operator_other_type)
 {
-    Core::Vector<double, 3> orig{ 1.0, 2.0, 3.0 };
-    Core::Vector<int, 3> copy{};
+    Vector<double, 3> orig{ 1.0, 2.0, 3.0 };
+    Vector<int, 3> copy{};
     copy = orig;
 
     EXPECT_EQ(copy, TestVec);
@@ -169,7 +170,7 @@ TEST_F(VectorTest, dot_product_operator)
 
 TEST_F(VectorTest, norm)
 {
-    Core::Vector<int, 3> vec{ 1, 2, 2 };
+    Vector<int, 3> vec{ 1, 2, 2 };
 
     EXPECT_FLOAT_EQ(vec.norm(), 3);
 }
@@ -184,17 +185,17 @@ TEST_F(VectorTest, outstream_overload)
 
 TEST_F(VectorTest, cross_product)
 {
-    Core::Vector<int, 3> u{ 1, 0, 0 };
-    Core::Vector<int, 3> v{ 0, 1, 0 };
+    Vector<int, 3> u{ 1, 0, 0 };
+    Vector<int, 3> v{ 0, 1, 0 };
 
-    Core::Vector<int, 3> expected{ 0, 0, 1 };
+    Vector<int, 3> expected{ 0, 0, 1 };
 
     ASSERT_EQ(cross(u, v), expected);
 }
 
 TEST_F(VectorTest, normalize)
 {
-    Core::Vector<float, 3> vec{ 1.0, 2.0, 3.0 };
+    Vector<float, 3> vec{ 1.0, 2.0, 3.0 };
     vec.normalize();
 
     ASSERT_FLOAT_EQ(vec.norm(), 1.0);
@@ -202,8 +203,8 @@ TEST_F(VectorTest, normalize)
 
 TEST_F(VectorTest, angleTo)
 {
-    Core::Vector<int, 3> vec1{ 1, 0, 0 };
-    Core::Vector<int, 3> vec2{ 0, 1, 0 };
+    Vector<int, 3> vec1{ 1, 0, 0 };
+    Vector<int, 3> vec2{ 0, 1, 0 };
 
     ASSERT_FLOAT_EQ(180*vec1.angleTo(vec1)/M_PI, 0.0);
     ASSERT_FLOAT_EQ(180*vec1.angleTo(vec2)/M_PI, 90.0);

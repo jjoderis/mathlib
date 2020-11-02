@@ -5,9 +5,9 @@
 #include <cassert>
 #include <iostream>
 #include <math.h>
-#include <util/type_traits.h>
+#include "../../util/type_traits.h"
 
-namespace Core{
+namespace MathLib {
     //A template for a basic vector of static size
     template<typename T, int size, typename = typename std::enable_if<std::is_arithmetic<T>::value, T>::type>
     class Vector{

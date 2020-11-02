@@ -1,6 +1,8 @@
 #include <gtest/gtest.h>
 #include <util/util.h>
 
+using namespace MathLib::Util;
+
 TEST(UTIL_TEST, is_close_on_float)
 {
     float start = 0.1f;
@@ -11,9 +13,9 @@ TEST(UTIL_TEST, is_close_on_float)
         sum += start;
     }
 
-    EXPECT_TRUE(Util::isClose(1.0f, sum));
-    EXPECT_FALSE(Util::isClose(1.0f, 1.00001f));
-    EXPECT_TRUE(Util::isClose(0.0f, sum - 1.0f, (std::numeric_limits<float>::epsilon() * sum)));
+    EXPECT_TRUE(isClose(1.0f, sum));
+    EXPECT_FALSE(isClose(1.0f, 1.00001f));
+    EXPECT_TRUE(isClose(0.0f, sum - 1.0f, (std::numeric_limits<float>::epsilon() * sum)));
 }
 
 TEST(UTIL_TEST, is_close_on_double)
@@ -26,7 +28,7 @@ TEST(UTIL_TEST, is_close_on_double)
         sum += start;
     }
 
-    EXPECT_TRUE(Util::isClose(1.0, sum));
-    EXPECT_FALSE(Util::isClose(1.0, 1.000000000001));
-    EXPECT_TRUE(Util::isClose(0.0, sum - 1.0, std::numeric_limits<double>::epsilon() * sum));
+    EXPECT_TRUE(isClose(1.0, sum));
+    EXPECT_FALSE(isClose(1.0, 1.000000000001));
+    EXPECT_TRUE(isClose(0.0, sum - 1.0, std::numeric_limits<double>::epsilon() * sum));
 }
