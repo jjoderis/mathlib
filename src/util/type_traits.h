@@ -1,5 +1,5 @@
-#ifndef UTIL_TYPE_TYPETRAITS_H
-#define UTIL_TYPE_TYPETRAITS_H
+#ifndef MATHLIB_UTIL_TYPE_TYPETRAITS_H
+#define MATHLIB_UTIL_TYPE_TYPETRAITS_H
 
 #include <type_traits>
 

@@ -47,6 +47,7 @@ set(TEST_FILES
     Core/Vector/vector.test.cpp
     Core/Matrix/matrix.test.cpp
     util/type_traits.test.cpp
+    util/util.test.cpp
 )
 
 # link test files against gtest_main
