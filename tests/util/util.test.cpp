@@ -1,11 +1,6 @@
 #include <gtest/gtest.h>
 #include <util/util.h>
 
-TEST(UTIL_TEST, is_close_on_comparable)
-{
-    EXPECT_TRUE(Util::isClose(1, 1));
-}
-
 TEST(UTIL_TEST, is_close_on_float)
 {
     float start = 0.1f;
