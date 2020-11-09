@@ -158,6 +158,16 @@ namespace MathLib {
             return *this;
         }
 
+        Vector<T, size>& operator*=(const Vector<T,size> &other)
+        {
+            for(int i = 0; i < size; ++i)
+            {
+                m_data[i] *= other.m_data[i];
+            }
+
+            return *this;
+        }
+
         template<typename V>
         Vector<T, size>& operator/=(const V val)
         {
@@ -229,7 +239,15 @@ namespace MathLib {
     }
 
     template<typename T, int size>
-    float operator*(const Vector<T, size> &v1, const Vector<T, size> &v2)
+    Vector<T, size> operator*(const Vector<T, size> &v1, const Vector<T, size> &v2)
+    {
+        Vector<T, size> product{ v1 };
+
+        return product *= v2;
+    }
+
+    template<typename T, int size>
+    float dot(const Vector<T, size> &v1, const Vector<T, size> &v2)
     {
         float sum{ 0 };
 
@@ -255,12 +273,6 @@ namespace MathLib {
         Vector<T, size> negation{ vector };
 
         return negation.negate();
-    }
-
-    template<typename T, int size>
-    float dot(const Vector<T, size> &v1, const Vector<T, size> &v2)
-    {
-        return v1 * v2;
     }
 
     template<typename T>

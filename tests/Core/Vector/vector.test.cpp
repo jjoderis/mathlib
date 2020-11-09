@@ -161,11 +161,11 @@ TEST_F(VectorTest, dot_product)
     EXPECT_FLOAT_EQ(res, 14);
 }
 
-TEST_F(VectorTest, dot_product_operator)
+TEST_F(VectorTest, vector_vector_multiplication)
 {
-    float res = TestVec * TestVec;
+    Vector<int, 3> exp{1, 4, 9};
 
-    EXPECT_FLOAT_EQ(res, 14);
+    EXPECT_FLOAT_EQ(res, TestVec * TestVec);
 }
 
 TEST_F(VectorTest, norm)
