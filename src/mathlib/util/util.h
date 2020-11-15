@@ -3,6 +3,7 @@
 
 #include <limits>
 #include <type_traits>
+#include <math.h>
 
 namespace MathLib {
     namespace Util {
@@ -21,6 +22,18 @@ namespace MathLib {
             T largest =(b > a) ? b : a;
 
             return diff <= (largest * maxRelDiff);
+        }
+
+        template <typename T>
+        T degToRad(T deg)
+        {
+            return (deg * M_PI) / 180;
+        }
+
+        template <typename T>
+        T radToDeg(T rad)
+        {
+            return (rad * 180) / M_PI;
         }
     }
 }

@@ -401,6 +401,19 @@ namespace MathLib {
         return true;
     }
 
+    template<typename T, int rows, int cols, typename = typename std::enable_if<std::is_floating_point<T>::value, T>::type>
+    bool allClose(const Matrix<T, rows, cols> &m1, const Matrix<T, rows, cols> &m2, T maxDiff = std::numeric_limits<T>::epsilon(), T maxRelDiff = std::numeric_limits<T>::epsilon()) {
+        for (int i = 0; i < rows; ++i){
+            for (int j = 0; j < cols; ++j) {
+                if (!Util::isClose(m1(i, j), m2(i, j), maxDiff, maxRelDiff)) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
     template<typename T, int rows, int cols>
     bool operator!=(const Matrix<T, rows, cols> &m1, const Matrix<T, rows, cols> &m2)
     {

@@ -6,6 +6,7 @@
 #include <iostream>
 #include <math.h>
 #include "../../util/type_traits.h"
+#include "../../util/util.h"
 
 namespace MathLib {
     //A template for a basic vector of static size
@@ -308,6 +309,18 @@ namespace MathLib {
         {
             if(v1(i) != v2(i))
             {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    template<typename T, int size, typename = typename std::enable_if<std::is_floating_point<T>::value, T>::type>
+    bool allClose(const Vector<T, size> &v1, const Vector<T, size> &v2, T maxDiff = std::numeric_limits<T>::epsilon(), T maxRelDiff = std::numeric_limits<T>::epsilon()) {
+        for (int i = 0; i < size; ++i)
+        {
+            if (!Util::isClose(v1(i), v2(i), maxDiff, maxRelDiff)) {
                 return false;
             }
         }
