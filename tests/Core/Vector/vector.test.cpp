@@ -165,7 +165,7 @@ TEST_F(VectorTest, vector_vector_multiplication)
 {
     Vector<int, 3> exp{1, 4, 9};
 
-    EXPECT_FLOAT_EQ(res, TestVec * TestVec);
+    EXPECT_EQ(exp, TestVec * TestVec);
 }
 
 TEST_F(VectorTest, norm)

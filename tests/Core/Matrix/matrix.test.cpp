@@ -313,6 +313,71 @@ TEST_F(MatrixTest, outstream_overload)
     EXPECT_EQ(output, std::string{"[ [ 1, 2, 3 ], [ 4, 5, 6 ] ]"}); 
 }
 
+TEST_F(MatrixTest, getTranslation)
+{
+    Matrix<float, 4, 4> expected{
+        1, 0, 0, 1,
+        0, 1, 0, 2,
+        0, 0, 1, 3,
+        0, 0, 0, 1
+    };
 
+    EXPECT_EQ(getTranslation(Vector<float, 3>{1, 2, 3}), expected);
+}
+
+TEST_F(MatrixTest, getScaling)
+{
+    Matrix<float, 3, 3> expected{
+        1, 0, 0,
+        0, 2, 0,
+        0, 0, 3
+    };
+
+    EXPECT_EQ(getScaling(Vector<float, 3>{1, 2, 3}), expected);
+}
+
+TEST_F(MatrixTest, getRotateX)
+{
+    Matrix<float, 3, 3> expected{
+        1, 0, 0,
+        0, 1, 0,
+        0, 0, 1
+    };
+
+    EXPECT_EQ(getRotateX(0.0f), expected);
+}
+
+TEST_F(MatrixTest, getRotateY)
+{
+    Matrix<float, 3, 3> expected{
+        1, 0, 0,
+        0, 1, 0,
+        0, 0, 1
+    };
+
+    EXPECT_EQ(getRotateY(0.0f), expected);
+}
+
+TEST_F(MatrixTest, getRotateZ)
+{
+    Matrix<float, 3, 3> expected{
+        1, 0, 0,
+        0, 1, 0,
+        0, 0, 1
+    };
+
+    EXPECT_EQ(getRotateZ(0.0f), expected);
+}
+
+TEST_F(MatrixTest, getRotation)
+{
+    Matrix<float, 3, 3> expected{
+        1, 0, 0,
+        0, 1, 0,
+        0, 0, 1
+    };
+
+    EXPECT_EQ(getRotation(Vector<float, 3>{0.0, 0.0, 0.0}), expected);
+}
 
 

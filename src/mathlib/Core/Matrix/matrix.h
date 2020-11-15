@@ -427,5 +427,56 @@ namespace MathLib {
 
         return out;
     }
+
+    template<typename T>
+    Matrix<T, 4, 4> getTranslation(const Vector<T, 3>& translation) {
+        return Matrix<T, 4, 4>{
+            1, 0, 0, translation(0),
+            0, 1, 0, translation(1),
+            0, 0, 1, translation(2),
+            0, 0, 0, 1
+        };
+    }
+
+    template<typename T>
+    Matrix<T, 3, 3> getScaling(const Vector<T, 3>& scaling) {
+        return Matrix<T, 3, 3>{
+            scaling(0), 0,          0,
+            0,          scaling(1), 0,
+            0,          0,          scaling(2)
+        };
+    }
+
+    template<typename T, typename = typename std::enable_if<std::is_floating_point<T>::value, T>::type>
+    Matrix<T, 3, 3> getRotateX(T rad) {
+        return Matrix<T, 3, 3>{
+            1.0,      0.0,       0.0,
+            0.0, cos(rad), -sin(rad),
+            0.0, sin(rad),  cos(rad)
+        };
+    }
+
+    template<typename T, typename = typename std::enable_if<std::is_floating_point<T>::value, T>::type>
+    Matrix<T, 3, 3> getRotateY(T rad) {
+        return Matrix<T, 3, 3>{
+             cos(rad), 0.0, sin(rad),
+                  0.0, 1.0,      0.0,
+            -sin(rad), 0.0, cos(rad)
+        };
+    }
+
+    template<typename T, typename = typename std::enable_if<std::is_floating_point<T>::value, T>::type>
+    Matrix<T, 3, 3> getRotateZ(T rad) {
+        return Matrix<T, 3, 3>{
+            cos(rad), -sin(rad), 0.0,
+            sin(rad),  cos(rad), 0.0,
+                 0.0,       0.0, 1.0
+        };
+    }
+
+    template<typename T, typename = typename std::enable_if<std::is_floating_point<T>::value, T>::type>
+    Matrix<T, 3, 3> getRotation(const Vector<T, 3>& rotation) {
+        return getRotateX(rotation(0)) * getRotateY(rotation(1)) * getRotateZ(rotation(2));
+    }
 }
 #endif
