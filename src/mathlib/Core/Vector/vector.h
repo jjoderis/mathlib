@@ -282,6 +282,18 @@ namespace MathLib {
 
         return product /= val;
     }
+
+    template<typename T, int size, typename V>
+    Vector<T, size> operator/(V val, const Vector<T, size> &vector)
+    {
+        Vector<T, size> product{};
+
+        for(int i = 0; i < size; ++i) {
+            product(i) = val / vector(i);
+        }
+
+        return product;
+    }
     
     template<typename T, int size>
     Vector<T, size> operator-(const Vector<T, size> &vector)
