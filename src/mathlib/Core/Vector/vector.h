@@ -25,7 +25,10 @@ namespace MathLib {
 
         ~Vector()
         {
-            delete [] m_data;
+            if (m_data != nullptr) {
+                delete [] m_data;
+            }
+
             m_data = nullptr;
         }
         
@@ -61,6 +64,11 @@ namespace MathLib {
             *this = other;
         }
 
+        // move construction
+        Vector(Vector && other) {
+            *this = other;
+        }
+
         template <typename U>
         Vector<T, size>& operator=(const Vector<U, size> &other)
         {
@@ -68,6 +76,13 @@ namespace MathLib {
             {
                 m_data[i] = other.at(i);
             }
+
+            return *this;
+        }
+
+        Vector& operator=(Vector && other) {
+            this->m_data = other.m_data;
+            other.m_data = nullptr;
 
             return *this;
         }

@@ -28,7 +28,9 @@ namespace MathLib {
 
         ~Matrix()
         {
-            delete [] m_data;
+            if (m_data != nullptr) {
+                delete [] m_data;
+            }
             m_data = nullptr;
         }
 
@@ -69,6 +71,10 @@ namespace MathLib {
             *this = other;
         }
 
+        Matrix(Matrix && other) {
+            *this = other;
+        }
+
         Matrix& operator=(const Matrix &other)
         {
             if (this == &other)
@@ -80,6 +86,13 @@ namespace MathLib {
             {
                 m_data[i] = other.m_data[i];
             }
+
+            return *this;
+        }
+
+        Matrix& operator=(Matrix && other) {
+            this->m_data = other.m_data;
+            other.m_data = nullptr;
 
             return *this;
         }
