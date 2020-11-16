@@ -3,6 +3,7 @@
 
 #include "./Core/Vector/vector.h"
 #include "./Core/Matrix/matrix.h"
+#include "./Core/Quaternion/quaternion.h"
 
 #include "./util/util.h"
 
