@@ -67,7 +67,7 @@ namespace MathLib {
 
         // move construction
         Vector(Vector && other) {
-            *this = other;
+            *this = std::move(other);
         }
 
         template <typename U>
@@ -205,7 +205,7 @@ namespace MathLib {
             return *this;
         }
 
-        float norm() const
+        double norm() const
         {
             return sqrt(dot(*this, *this));
         }
@@ -263,9 +263,9 @@ namespace MathLib {
     }
 
     template<typename T, int size>
-    float dot(const Vector<T, size> &v1, const Vector<T, size> &v2)
+    double dot(const Vector<T, size> &v1, const Vector<T, size> &v2)
     {
-        float sum{ 0 };
+        double sum{ 0 };
 
         for(int i = 0; i < size; ++i)
         {

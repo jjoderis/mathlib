@@ -72,7 +72,7 @@ namespace MathLib {
         }
 
         Matrix(Matrix && other) {
-            *this = other;
+            *this = std::move(other);
         }
 
         Matrix& operator=(const Matrix &other)
