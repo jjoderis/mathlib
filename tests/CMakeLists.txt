@@ -9,6 +9,7 @@ add_subdirectory("${EXTERN_DIR}/googletest" "${BUILD_DIR}/external/googletest")
 set(TEST_FILES
     Core/Vector/vector.test.cpp
     Core/Matrix/matrix.test.cpp
+    Core/Quaternion/quaternion.test.cpp
     util/type_traits.test.cpp
     util/util.test.cpp
 )
