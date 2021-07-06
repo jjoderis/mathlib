@@ -227,6 +227,8 @@ public:
     {
         return acos(dot(*this, other) / (this->norm() * other.norm()));
     }
+
+    Vector<T, size> reflect(const Vector<T, size> &normal) const { return *this - 2 * dot(*this, normal) * normal; }
 };
 
 template <typename T, int size>
