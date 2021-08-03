@@ -6,6 +6,7 @@
 #include <iostream>
 #include <math.h>
 #include "../Vector/vector.h"
+#include "../Quaternion/quaternion.h"
 #include "../../util/type_traits.h"
 
 namespace MathLib {
@@ -490,6 +491,23 @@ namespace MathLib {
     template<typename T, typename = typename std::enable_if<std::is_floating_point<T>::value, T>::type>
     Matrix<T, 3, 3> getRotation(const Vector<T, 3>& rotation) {
         return getRotateX(rotation(0)) * getRotateY(rotation(1)) * getRotateZ(rotation(2));
+    }
+
+    template<typename T, typename = typename std::enable_if<std::is_floating_point<T>::value, T>::type>
+    Matrix<T, 3, 3> getRotation(const Quaternion<T>& quat) {
+        T q0 = quat.qw();
+        T q1 = quat.qx();
+        T q2 = quat.qy();
+        T q3 = quat.qz();
+        T q02 = pow(q0, 2);
+        T q12 = pow(q1, 2);
+        T q22 = pow(q2, 2);
+        T q32 = pow(q3, 2);
+        return Matrix<T, 3, 3>{
+            2*(q02 + q12) - 1, 2*(q1*q2 - q0*q3), 2*(q1*q3 + q0*q2),
+            2*(q1*q2 + q0*q3), 2*(q02 + q22) - 1, 2*(q2*q3 - q0*q1),
+            2*(q1*q3 - q0*q2), 2*(q2*q3 + q0*q1), 2*(q02 + q32) - 1
+        };
     }
 }
 #endif

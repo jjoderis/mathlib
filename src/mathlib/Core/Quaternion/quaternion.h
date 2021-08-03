@@ -57,7 +57,7 @@ namespace MathLib {
             return m_qv(0);
         }
 
-        const T& qx() const {
+        T qx() const {
             return m_qv(0);
         }
 
@@ -65,7 +65,7 @@ namespace MathLib {
             return m_qv(1);
         }
 
-        const T& qy() const {
+        T qy() const {
             return m_qv(1);
         }
 
@@ -73,7 +73,7 @@ namespace MathLib {
             return m_qv(2);
         }
 
-        const T& qz() const {
+        T qz() const {
             return m_qv(2);
         }
 
@@ -81,7 +81,7 @@ namespace MathLib {
             return m_qw;
         }
 
-        const T& qw() const {
+        T qw() const {
             return m_qw;
         }
 
@@ -129,6 +129,11 @@ namespace MathLib {
             normalizedAxis.normalize();
             m_qv = normalizedAxis * sin(angle/2);
             m_qw = cos(angle/2);
+            return *this;
+        }
+
+        Quaternion<T>& operator*=(const Quaternion<T> &other) {
+            *this = *this * other;
             return *this;
         }
     };
