@@ -222,6 +222,15 @@ public:
         return *this;
     }
 
+    Vector<T, size> &clamp(const Vector<T, size> &min, const Vector<T, size> &max) {
+        for (int i = 0; i < size; ++i) {
+            m_data[i] = (m_data[i] < min) ? min : m_data[i];
+            m_data[i] = (m_data[i] > max) ? max : m_data[i];
+        }
+
+        return *this;
+    }
+
     // returns the angle between this and the other vector
     double angleTo(const Vector<T, size> &other) const
     {
