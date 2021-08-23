@@ -3,6 +3,7 @@
 
 #include "../../util/type_traits.h"
 #include "../../util/util.h"
+#include "./vectorPointBase.h"
 #include <cassert>
 #include <iostream>
 #include <math.h>
@@ -12,272 +13,73 @@ namespace MathLib
 {
 // A template for a basic vector of static size
 template <typename T, int size, typename = typename std::enable_if<std::is_arithmetic<T>::value, T>::type>
-class Vector
+class Vector : public VectorPointBase<T, size>
 {
-protected:
-    T *m_data = nullptr;
-    friend class Vector<T, size - 1>;
-    friend class Vector<T, size + 1>;
-
 public:
-    Vector() { m_data = new T[size]; }
-
-    ~Vector()
-    {
-        if (m_data != nullptr)
-        {
-            delete[] m_data;
-        }
-
-        m_data = nullptr;
-    }
+    Vector() = default;
 
     // provide constructor that is only callable with correct number of parameters
     template <typename... Tail>
-    Vector(typename std::enable_if<sizeof...(Tail) + 1 == size && are_arithmetic<Tail...>{}, T>::type head,
-           Tail... tail)
-        : m_data{new T[size]{head, T(tail)...}}
+    Vector(T head, Tail... tail) : VectorPointBase<T, size>{head, T(tail)...}
     {
     }
 
-    Vector(const Vector &other) : Vector() { *this = other; }
+    Vector(const Vector<T, size - 1> &other, T val) : VectorPointBase<T, size>{other, val} {}
 
-    Vector<T, size> &operator=(const Vector<T, size> &other)
-    {
-        if (this == &other)
-        {
-            return *this;
-        }
-
-        for (int i = 0; i < size; ++i)
-        {
-            m_data[i] = other.m_data[i];
-        }
-
-        return *this;
-    }
-
-    // copy construction and assignment with conversion
-    template <typename U>
-    Vector(const Vector<U, size> &other) : Vector()
-    {
-        *this = other;
-    }
-
-    // move construction
-    Vector(Vector &&other) { *this = std::move(other); }
-
-    template <typename U>
-    Vector<T, size> &operator=(const Vector<U, size> &other)
-    {
-        for (int i = 0; i < size; ++i)
-        {
-            m_data[i] = other.at(i);
-        }
-
-        return *this;
-    }
-
-    Vector &operator=(Vector &&other)
-    {
-        this->m_data = other.m_data;
-        other.m_data = nullptr;
-
-        return *this;
-    }
-
-    Vector(const Vector<T, size - 1> &other, T val) : Vector()
-    {
-        for (int i = 0; i < size; ++i)
-        {
-            m_data[i] = other.m_data[i];
-        }
-
-        m_data[size - 1] = val;
-    }
-
-    Vector(const Vector<T, size + 1> &other) : Vector()
-    {
-        for (int i = 0; i < size; ++i)
-        {
-            m_data[i] = other.m_data[i];
-        }
-    }
-
-    // using () operator for subscript to have same API as matrix ([] can't take two arguments)
-    T operator()(int index) const { return m_data[index]; }
-
-    T &operator()(int index) { return m_data[index]; }
-
-    T at(int index) const
-    {
-        assert("Accessing vector with index out of its bounds" && index >= 0 && index < size);
-
-        return m_data[index];
-    }
-
-    T &at(int index)
-    {
-        assert("Accessing vector with index out of its bounds" && index >= 0 && index < size);
-
-        return m_data[index];
-    }
-
-    void set(int index, T val)
-    {
-        assert("Accessing vector with index out of its bounds" && index >= 0 && index < size);
-
-        m_data[index] = val;
-    }
-
-    T *raw() const { return m_data; }
-
-    Vector<T, size> &operator+=(const Vector<T, size> &other)
-    {
-        for (int i = 0; i < size; ++i)
-        {
-            m_data[i] += other.m_data[i];
-        }
-
-        return *this;
-    }
-
-    Vector<T, size> &operator+=(T val)
-    {
-        for (int i = 0; i < size; ++i)
-        {
-            m_data[i] += val;
-        }
-
-        return *this;
-    }
-
-    Vector<T, size> &operator-=(const Vector<T, size> &other)
-    {
-        for (int i = 0; i < size; ++i)
-        {
-            m_data[i] -= other.m_data[i];
-        }
-
-        return *this;
-    }
-
-    Vector<T, size> &operator-=(T val)
-    {
-        for (int i = 0; i < size; ++i)
-        {
-            m_data[i] -= val;
-        }
-
-        return *this;
-    }
-
-    template <typename V>
-    Vector<T, size> &operator*=(const V val)
-    {
-        for (int i = 0; i < size; ++i)
-        {
-            m_data[i] *= val;
-        }
-
-        return *this;
-    }
-
-    Vector<T, size> &operator*=(const Vector<T, size> &other)
-    {
-        for (int i = 0; i < size; ++i)
-        {
-            m_data[i] *= other.m_data[i];
-        }
-
-        return *this;
-    }
-
-    template <typename V>
-    Vector<T, size> &operator/=(const V val)
-    {
-        for (int i = 0; i < size; ++i)
-        {
-            m_data[i] /= val;
-        }
-
-        return *this;
-    }
-
-    Vector<T, size> &negate()
-    {
-        for (int i = 0; i < size; ++i)
-        {
-            m_data[i] *= -1;
-        }
-
-        return *this;
-    }
+    Vector(const Vector<T, size + 1> &other) : VectorPointBase<T, size>{other} {}
 
     double norm() const { return sqrt(dot(*this, *this)); }
-
-    Vector<T, size> &normalize()
-    {
-        *this /= this->norm();
-        return *this;
-    }
-
-    Vector<T, size> &clamp(const Vector<T, size> &min, const Vector<T, size> &max) {
-        for (int i = 0; i < size; ++i) {
-            m_data[i] = (m_data[i] < min) ? min : m_data[i];
-            m_data[i] = (m_data[i] > max) ? max : m_data[i];
-        }
-
-        return *this;
-    }
 
     // returns the angle between this and the other vector
     double angleTo(const Vector<T, size> &other) const
     {
         return acos(dot(*this, other) / (this->norm() * other.norm()));
     }
-
-    Vector<T, size> reflect(const Vector<T, size> &normal) const { return *this - 2 * dot(*this, normal) * normal; }
 };
 
+std::false_type is_vector_impl(...);
 template <typename T, int size>
-Vector<T, size> operator+(const Vector<T, size> &v1, const Vector<T, size> &v2)
+std::true_type is_vector_impl(Vector<T, size> const volatile &);
+
+template <typename T>
+using is_vector = decltype(is_vector_impl(std::declval<T &>()));
+
+template <typename T>
+typename std::enable_if<is_vector<T>::value, T>::type &operator+=(T &vector, const T &other)
 {
-    Vector<T, size> sum{v1};
+    for (int i = 0; i < vector.size(); ++i)
+    {
+        vector(i) += other(i);
+    }
+
+    return vector;
+}
+
+template <typename T>
+typename std::enable_if<is_vector<T>::value, T>::type &operator-=(T &vector, const T &other)
+{
+    for (int i = 0; i < vector.size(); ++i)
+    {
+        vector(i) -= other(i);
+    }
+
+    return vector;
+}
+
+template <typename T>
+typename std::enable_if<is_vector<T>::value, T>::type operator+(const T &v1, const T &v2)
+{
+    T sum{v1};
 
     return sum += v2;
 }
 
-template <typename T, int size>
-Vector<T, size> operator-(const Vector<T, size> &v1, const Vector<T, size> &v2)
+template <typename T>
+typename std::enable_if<is_vector<T>::value, T>::type operator-(const T &v1, const T &v2)
 {
-    Vector<T, size> diff{v1};
+    T diff{v1};
 
     return diff -= v2;
-}
-
-template <typename T, int size, typename V>
-Vector<T, size> operator*(V val, const Vector<T, size> &vector)
-{
-    Vector<T, size> product{vector};
-
-    return product *= val;
-}
-
-template <typename T, int size, typename V>
-Vector<T, size> operator*(const Vector<T, size> &vector, V val)
-{
-    Vector<T, size> product{vector};
-
-    return product *= val;
-}
-
-template <typename T, int size>
-Vector<T, size> operator*(const Vector<T, size> &v1, const Vector<T, size> &v2)
-{
-    Vector<T, size> product{v1};
-
-    return product *= v2;
 }
 
 template <typename T, int size>
@@ -293,45 +95,46 @@ double dot(const Vector<T, size> &v1, const Vector<T, size> &v2)
     return sum;
 }
 
-template <typename T, int size, typename V>
-Vector<T, size> operator/(const Vector<T, size> &vector, V val)
-{
-    Vector<T, size> product{vector};
-
-    return product /= val;
-}
-
-template <typename T, int size, typename V>
-Vector<T, size> operator/(V val, const Vector<T, size> &vector)
-{
-    Vector<T, size> product{};
-
-    for (int i = 0; i < size; ++i)
-    {
-        product(i) = val / vector(i);
-    }
-
-    return product;
-}
-
-template <typename T, int size>
-Vector<T, size> operator-(const Vector<T, size> &vector)
-{
-    Vector<T, size> negation{vector};
-
-    return negation.negate();
-}
+std::false_type is_vector3_impl(...);
+template <typename T>
+std::true_type is_vector3_impl(Vector<T, 3> const volatile &);
 
 template <typename T>
-Vector<T, 3> cross(const Vector<T, 3> &v1, const Vector<T, 3> &v2)
+using is_vector3 = decltype(is_vector3_impl(std::declval<T &>()));
+
+template <typename T>
+typename std::enable_if<is_vector3<T>::value, T>::type cross(const T &v1, const T &v2)
 {
-    Vector<T, 3> newVec;
+    T newVec;
 
     newVec.at(0) = v1.at(1) * v2.at(2) - v1.at(2) * v2.at(1);
     newVec.at(1) = v1.at(2) * v2.at(0) - v1.at(0) * v2.at(2);
     newVec.at(2) = v1.at(0) * v2.at(1) - v1.at(1) * v2.at(0);
 
     return newVec;
+}
+
+template <typename T>
+typename std::enable_if<is_vector<T>::value, T>::type &normalize(T &vector)
+{
+    vector /= vector.norm();
+    return vector;
+}
+
+template <typename T>
+typename std::enable_if<is_vector<T>::value, T>::type normalize(const T &vector)
+{
+    T newVector{vector};
+
+    normalize(newVector);
+
+    return newVector;
+}
+
+template <typename T>
+typename std::enable_if<is_vector<T>::value, T>::type reflect(const T &vector, const T &normal)
+{
+    return vector - 2 * dot(vector, normal) * normal;
 }
 
 template <typename T, int size>
@@ -374,12 +177,9 @@ bool operator!=(const Vector<T, size> &v1, const Vector<T, size> &v2)
 template <typename T, int size>
 std::ostream &operator<<(std::ostream &out, const Vector<T, size> &vector)
 {
-    out << "[ " << vector.at(0);
+    out << "[ ";
 
-    for (int i = 1; i < size; ++i)
-    {
-        out << ", " << vector.at(i);
-    }
+    out << (VectorPointBase<T, size>)vector;
 
     out << " ]";
 
