@@ -75,7 +75,7 @@ public:
     {
         for (int i = 0; i < size; ++i)
         {
-            this->m_data[i] += vector.m_data[i];
+            this->m_data[i] += vector(i);
         }
 
         return *this;
@@ -85,7 +85,7 @@ public:
     {
         for (int i = 0; i < size; ++i)
         {
-            this->m_data[i] -= vector.m_data[i];
+            this->m_data[i] -= vector(i);
         }
 
         return *this;

@@ -2,6 +2,7 @@
 #define MATHLIB_MAIN_INCLUDE_H
 
 #include "./Core/Matrix/matrix.h"
+#include "./Core/Vector/point.h"
 #include "./Core/Vector/vector.h"
 
 #include "./util/util.h"

@@ -37,15 +37,8 @@ public:
     }
 };
 
-std::false_type is_vector_impl(...);
 template <typename T, int size>
-std::true_type is_vector_impl(Vector<T, size> const volatile &);
-
-template <typename T>
-using is_vector = decltype(is_vector_impl(std::declval<T &>()));
-
-template <typename T>
-typename std::enable_if<is_vector<T>::value, T>::type &operator+=(T &vector, const T &other)
+Vector<T, size> &operator+=(Vector<T, size> &vector, const Vector<T, size> &other)
 {
     for (int i = 0; i < vector.size(); ++i)
     {
@@ -55,8 +48,8 @@ typename std::enable_if<is_vector<T>::value, T>::type &operator+=(T &vector, con
     return vector;
 }
 
-template <typename T>
-typename std::enable_if<is_vector<T>::value, T>::type &operator-=(T &vector, const T &other)
+template <typename T, int size>
+Vector<T, size> &operator-=(Vector<T, size> &vector, const Vector<T, size> &other)
 {
     for (int i = 0; i < vector.size(); ++i)
     {
@@ -66,18 +59,18 @@ typename std::enable_if<is_vector<T>::value, T>::type &operator-=(T &vector, con
     return vector;
 }
 
-template <typename T>
-typename std::enable_if<is_vector<T>::value, T>::type operator+(const T &v1, const T &v2)
+template <typename T, int size>
+Vector<T, size> operator+(const Vector<T, size> &v1, const Vector<T, size> &v2)
 {
-    T sum{v1};
+    Vector<T, size> sum{v1};
 
     return sum += v2;
 }
 
-template <typename T>
-typename std::enable_if<is_vector<T>::value, T>::type operator-(const T &v1, const T &v2)
+template <typename T, int size>
+Vector<T, size> operator-(const Vector<T, size> &v1, const Vector<T, size> &v2)
 {
-    T diff{v1};
+    Vector<T, size> diff{v1};
 
     return diff -= v2;
 }
@@ -95,17 +88,10 @@ double dot(const Vector<T, size> &v1, const Vector<T, size> &v2)
     return sum;
 }
 
-std::false_type is_vector3_impl(...);
 template <typename T>
-std::true_type is_vector3_impl(Vector<T, 3> const volatile &);
-
-template <typename T>
-using is_vector3 = decltype(is_vector3_impl(std::declval<T &>()));
-
-template <typename T>
-typename std::enable_if<is_vector3<T>::value, T>::type cross(const T &v1, const T &v2)
+Vector<T, 3> cross(const Vector<T, 3> &v1, const Vector<T, 3> &v2)
 {
-    T newVec;
+    Vector<T, 3> newVec;
 
     newVec.at(0) = v1.at(1) * v2.at(2) - v1.at(2) * v2.at(1);
     newVec.at(1) = v1.at(2) * v2.at(0) - v1.at(0) * v2.at(2);
@@ -114,25 +100,25 @@ typename std::enable_if<is_vector3<T>::value, T>::type cross(const T &v1, const 
     return newVec;
 }
 
-template <typename T>
-typename std::enable_if<is_vector<T>::value, T>::type &normalize(T &vector)
+template <typename T, int size>
+Vector<T, size> &normalize(Vector<T, size> &vector)
 {
     vector /= vector.norm();
     return vector;
 }
 
-template <typename T>
-typename std::enable_if<is_vector<T>::value, T>::type normalize(const T &vector)
+template <typename T, int size>
+Vector<T, size> normalize(const Vector<T, size> &vector)
 {
-    T newVector{vector};
+    Vector<T, size> newVector{vector};
 
     normalize(newVector);
 
     return newVector;
 }
 
-template <typename T>
-typename std::enable_if<is_vector<T>::value, T>::type reflect(const T &vector, const T &normal)
+template <typename T, int size>
+Vector<T, size> reflect(const Vector<T, size> &vector, const Vector<T, size> &normal)
 {
     return vector - 2 * dot(vector, normal) * normal;
 }

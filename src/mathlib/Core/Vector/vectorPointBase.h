@@ -138,7 +138,7 @@ template <typename T>
 using is_point_or_vector = decltype(is_point_or_vector_impl(std::declval<T &>()));
 
 template <typename U, typename T>
-typename std::enable_if<is_point_or_vector<U>::value, U>::type &operator+=(U &vp, T val)
+typename std::enable_if<is_point_or_vector<U>::value && std::is_arithmetic<T>::value, U>::type &operator+=(U &vp, T val)
 {
     for (int i = 0; i < vp.size(); ++i)
     {

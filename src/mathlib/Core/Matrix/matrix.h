@@ -2,6 +2,7 @@
 #define MATHLIB_CORE_MATRIX_MATRIX_TEMPLATE
 
 #include "../../util/type_traits.h"
+#include "../Vector/point.h"
 #include "../Vector/vector.h"
 #include <cassert>
 #include <iostream>
@@ -244,7 +245,7 @@ public:
     }
 
     template <typename V>
-    Matrix<T, rows, cols> &operator*=(V scalar)
+    Matrix<T, rows, cols> &operator*=(typename std::enable_if<std::is_arithmetic<V>::value, V>::type scalar)
     {
         for (int i = 0; i < rows * cols; ++i)
         {
@@ -315,7 +316,8 @@ Matrix<T, rows, cols> operator-(const Matrix<T, rows, cols> &m1, const Matrix<T,
 }
 
 template <typename T, int rows, int cols, typename V>
-Matrix<T, rows, cols> operator*(const Matrix<T, rows, cols> &m1, V scalar)
+Matrix<T, rows, cols> operator*(const Matrix<T, rows, cols> &m1,
+                                typename std::enable_if<std::is_arithmetic<V>::value, V>::type scalar)
 {
     Matrix<T, rows, cols> base{m1};
 
@@ -356,6 +358,24 @@ template <typename T, int rows, int cols, typename V>
 Vector<T, rows> operator*(const Matrix<T, rows, cols> &mat, const Vector<V, cols> &vec)
 {
     Vector<T, rows> res{};
+
+    for (int i{0}; i < rows; ++i)
+    {
+        T sum{0};
+        for (int j{0}; j < cols; ++j)
+        {
+            sum += mat.at(i, j) * vec.at(j);
+        }
+        res.set(i, sum);
+    }
+
+    return res;
+}
+
+template <typename T, int rows, int cols, typename V>
+Point<T, rows> operator*(const Matrix<T, rows, cols> &mat, const Point<V, cols> &vec)
+{
+    Point<T, rows> res{};
 
     for (int i{0}; i < rows; ++i)
     {
