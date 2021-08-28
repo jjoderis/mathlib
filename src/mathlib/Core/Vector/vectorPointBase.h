@@ -261,6 +261,55 @@ typename std::enable_if<is_point_or_vector<U>::value, U>::type &clamp(U &vp, con
     return vp;
 }
 
+template <typename T>
+float param_sum_impl(float param, const T &vp)
+{
+    return param;
+}
+
+template <typename T, typename... Args>
+float param_sum_impl(float param, const T &vp, const Args &...args)
+{
+    return param + param_sum_impl(args...);
+}
+
+template <typename T>
+void combine_point_or_vector_impl(T &combination, float param, const T &vp)
+{
+    for (int i{0}; i < combination.size(); ++i)
+    {
+        combination(i) += param * vp(i);
+    }
+}
+
+template <typename T, typename... Args>
+void combine_point_or_vector_impl(T &combination, float param, const T &vp, const Args &...args)
+{
+    for (int i{0}; i < combination.size(); ++i)
+    {
+        combination(i) += param * vp(i);
+    }
+
+    combine_point_or_vector_impl(combination, args...);
+}
+
+template <typename T, typename... Args>
+T affineCombination(float param, const T &vp, const Args &...args)
+{
+    static_assert("Called affineCombination with uneven number of arguments. Should be called with"
+                  "(Parameter, Point/Vector, Parameter, ...)" &&
+                  sizeof...(Args) % 2 == 0);
+    float paramSum{param_sum_impl(param, vp, args...)};
+    assert("Parameters are not summing up to 1." && Util::isClose(paramSum, 1.0f));
+
+    T combination{vp};
+    combination *= param;
+
+    combine_point_or_vector_impl(combination, args...);
+
+    return combination;
+}
+
 template <typename T, int size>
 bool operator==(const VectorPointBase<T, size> &v1, const VectorPointBase<T, size> &v2)
 {
