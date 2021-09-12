@@ -28,7 +28,11 @@ public:
 
     Vector(const Vector<T, size + 1> &other) : VectorPointBase<T, size>{other} {}
 
-    double norm() const { return sqrt(dot(*this, *this)); }
+    template <typename U = T>
+    U norm() const
+    {
+        return sqrt(dot(*this, *this));
+    }
 
     // returns the angle between this and the other vector
     double angleTo(const Vector<T, size> &other) const
@@ -75,10 +79,10 @@ Vector<T, size> operator-(const Vector<T, size> &v1, const Vector<T, size> &v2)
     return diff -= v2;
 }
 
-template <typename T, int size>
-double dot(const Vector<T, size> &v1, const Vector<T, size> &v2)
+template <typename T, int size, typename U = T>
+U dot(const Vector<T, size> &v1, const Vector<T, size> &v2)
 {
-    double sum{0};
+    U sum{0};
 
     for (int i = 0; i < size; ++i)
     {
