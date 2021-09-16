@@ -90,6 +90,30 @@ public:
 
         return *this;
     }
+
+    static Point<T, size> random()
+    {
+        Point<T, size> p{};
+
+        for (int i{0}; i < size; ++i)
+        {
+            p.m_data[i] = Util::random_number<T>();
+        }
+
+        return p;
+    }
+
+    static Point<T, size> random(T min, T max)
+    {
+        Point<T, size> p{};
+
+        for (int i{0}; i < size; ++i)
+        {
+            p.m_data[i] = Util::random_number<T>(min, max);
+        }
+
+        return p;
+    }
 };
 
 template <typename T, int size>
@@ -109,7 +133,7 @@ Point<T, size> operator+(const Point<T, size> &p, const Vector<T, size> &v)
 template <typename T, int size>
 Point<T, size> operator-(const Point<T, size> &p, const Vector<T, size> &v)
 {
-    Vector<T, size> diff{p};
+    Point<T, size> diff{p};
 
     return diff -= v;
 }

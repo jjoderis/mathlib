@@ -34,10 +34,40 @@ public:
         return sqrt(dot(*this, *this));
     }
 
+    template <typename U = T>
+    U norm_squared() const
+    {
+        return dot(*this, *this);
+    }
+
     // returns the angle between this and the other vector
     double angleTo(const Vector<T, size> &other) const
     {
         return acos(dot(*this, other) / (this->norm() * other.norm()));
+    }
+
+    static Vector<T, size> random()
+    {
+        Vector<T, size> v{};
+
+        for (int i{0}; i < size; ++i)
+        {
+            v.m_data[i] = Util::random_number<T>();
+        }
+
+        return v;
+    }
+
+    static Vector<T, size> random(T min, T max)
+    {
+        Vector<T, size> v{};
+
+        for (int i{0}; i < size; ++i)
+        {
+            v.m_data[i] = Util::random_number<T>(min, max);
+        }
+
+        return v;
     }
 };
 
@@ -125,6 +155,15 @@ template <typename T, int size>
 Vector<T, size> reflect(const Vector<T, size> &vector, const Vector<T, size> &normal)
 {
     return vector - 2 * dot(vector, normal) * normal;
+}
+
+template <typename T, int size>
+Vector<T, size> refract(const Vector<T, size> &vector, const Vector<T, size> &normal, double etaiOverEtat)
+{
+    auto cosTheta{std::min(dot(-vector, normal), static_cast<T>(1.0))};
+    Vector<T, size> rOutPerp{etaiOverEtat * (vector + cosTheta * normal)};
+    Vector<T, size> rOutParallel{-std::sqrt(std::abs(1.0 - rOutPerp.norm_squared())) * normal};
+    return rOutParallel + rOutPerp;
 }
 
 template <typename T, int size>

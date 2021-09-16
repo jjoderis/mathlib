@@ -5,6 +5,7 @@
 #include "../../util/util.h"
 #include <cassert>
 #include <iostream>
+#include <limits>
 #include <math.h>
 #include <type_traits>
 
@@ -90,6 +91,7 @@ public:
 
     VectorPointBase &operator=(VectorPointBase &&other)
     {
+        delete this->m_data;
         this->m_data = other.m_data;
         other.m_data = nullptr;
 
@@ -124,6 +126,21 @@ public:
         assert("Accessing out of bounds index" && index >= 0 && index < numElements);
 
         m_data[index] = val;
+    }
+
+    bool nearZero() const
+    {
+        const auto s = 10 * std::numeric_limits<T>::epsilon();
+
+        for (int i{0}; i < numElements; ++i)
+        {
+            if (m_data[i] > s)
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     // return a pointer to the internal data array
@@ -228,6 +245,19 @@ typename std::enable_if<is_point_or_vector<U>::value, U>::type operator/(V val, 
     }
 
     return product;
+}
+
+template <typename U>
+typename std::enable_if<is_point_or_vector<U>::value, U>::type sqrtVP(const U &vp)
+{
+    U res{vp};
+
+    for (int i{0}; i < vp.size(); ++i)
+    {
+        res.at(i) = std::sqrt(vp.at(i));
+    }
+
+    return res;
 }
 
 template <typename U>

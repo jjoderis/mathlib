@@ -93,6 +93,7 @@ public:
 
     Matrix &operator=(Matrix &&other)
     {
+        delete this->m_data;
         this->m_data = other.m_data;
         other.m_data = nullptr;
 
